@@ -1,0 +1,2 @@
+#!/bin/bash
+docker run -it -P -v /home/xiaomai/Works/ipmon.hellohtml5.com:/var/www/ipmon.hellohtml5.com:rw witi/ipmon /bin/bash

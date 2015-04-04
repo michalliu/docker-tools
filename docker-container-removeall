@@ -1,0 +1,15 @@
+#!/bin/bash
+#docker ps -a | grep 'ago' | awk '{print $1}' | xargs --no-run-if-empty docker rm 
+
+IFS=$'\n'
+for line in `docker ps -a | grep 'ago'`;do
+name=$(echo $line | awk '{print $NF}');
+hash=$(echo $line | awk '{print $1}');
+echo $line | grep "Exited" > /dev/null;
+if [ $? -ne 0 ];then
+echo "remove $name($hash) skipped, container is running"
+else
+echo "remove container $name($hash)"
+docker rm $hash > /dev/null
+fi
+done

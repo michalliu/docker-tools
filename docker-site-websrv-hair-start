@@ -1,0 +1,3 @@
+#!/bin/sh
+ID=$(docker run -d -p 80:80 --name hair_websrv --link hair_svn:svn --link hair_mysql:db witi/debian_websrv_hair:latest /bin/serve)
+docker inspect $ID | grep -C 5 HostPort

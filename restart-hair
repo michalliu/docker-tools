@@ -1,0 +1,48 @@
+#!/bin/bash
+set -e
+#set -x
+
+echo "stopping all containers"
+docker-container-stopall
+
+WEB_CONTAINERID=$(docker ps -a | grep hair_websrv | awk '{print $1}')
+SVN_CONTAINERID=$(docker ps -a | grep hair_svn | awk '{print $1}')
+MYSQL_CONTAINERID=$(docker ps -a | grep hair_mysql | awk '{print $1}')
+
+CDATE=`date +%Y%m%d%H%M%S`
+
+if [ "$WEB_CONTAINERID" != "" ];then
+IMAGE_NAME="debian_websrv_hair:latest"
+echo "save hair_websrv to $IMAGE_NAME"
+docker commit -m 'stat at $CDATE' $WEB_CONTAINERID $IMAGE_NAME > /dev/null
+fi
+
+if [ "$SVN_CONTAINERID" != "" ];then
+IMAGE_NAME="witi/debian_svn_hair:latest"
+echo "save hair_svn to $IMAGE_NAME"
+docker commit -m 'stat at $CDATE' $SVN_CONTAINERID $IMAGE_NAME
+fi
+
+if [ "$MYSQL_CONTAINERID" != "" ];then
+IMAGE_NAME="witi/debian_mysql5.5_hair:latest"
+echo "save hair_mysql to $IMAGE_NAME"
+docker commit -m 'stat at $CDATE' $MYSQL_CONTAINERID $IMAGE_NAME
+# backup mysql
+#IMAGE_NAME="witi/debian_mysql5.5_hair:$CDATE"
+#echo "save hair_mysql to $IMAGE_NAME"
+#docker commit -m 'stat at $CDATE' $MYSQL_CONTAINERID $IMAGE_NAME
+fi
+
+docker-container-removeall
+
+# the order is important
+echo "starting svn ..."
+docker-site-svn-hair-start > /dev/null
+echo "starting mysql ..."
+docker-site-mysql-hair-start > /dev/null
+echo "starting webserver ..."
+docker-site-websrv-hair-start > /dev/null
+
+docker-container-listall
+
+echo "Done!"

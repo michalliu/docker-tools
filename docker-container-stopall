@@ -1,0 +1,14 @@
+#!/bin/bash
+#docker ps -a | grep -v 'Exited' | awk '{print $1}' | xargs --no-run-if-empty docker stop
+IFS=$'\n'
+for line in `docker ps -a | grep 'ago'`;do
+name=$(echo $line | awk '{print $NF}');
+hash=$(echo $line | awk '{print $1}');
+echo $line | grep "Exited" > /dev/null;
+if [ $? -ne 0 ];then
+echo "stop $name($hash)"
+else
+echo "stop $name($hash) skipped"
+fi
+docker stop $hash > /dev/null
+done

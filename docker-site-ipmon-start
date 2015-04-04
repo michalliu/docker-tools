@@ -1,0 +1,3 @@
+#!/bin/bash
+ID=$(docker run -d -P -v /home/xiaomai/Works/ipmon.hellohtml5.com:/var/www/ipmon.hellohtml5.com:rw witi/ipmon /bin/serve)
+docker inspect $ID | grep -C 5 HostPort
