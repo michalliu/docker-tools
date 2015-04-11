@@ -1,3 +1,2 @@
 #!/bin/sh
-ID=$(docker run -d -p 80:80 -p 8307:80 -p 6881:6881 -v /home/xiaomai/Works/bt.cubian.org:/var/www/bt.cubian.org:rw -v /home/xiaomai/Works/bt.cubian.org/share:/home/ubuntu/share/:rw tracker /bin/serve)
-docker inspect $ID | grep -C 5 HostPort
+docker run -d -p 80:80 -p 8307:80 -p 6881:6881 -v /home/xiaomai/Works/bt.cubian.org:/var/www/bt.cubian.org:rw -v /home/xiaomai/Works/bt.cubian.org/share:/home/ubuntu/share/:rw tracker /bin/serve

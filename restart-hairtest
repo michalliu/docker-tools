@@ -1,0 +1,17 @@
+#!/bin/bash
+set -e
+# the order is important
+echo "starting svn ..."
+docker-site-hair-svn-start
+echo "starting mysql ..."
+docker-site-hair-mysql-start
+echo "starting webserver ..."
+docker-site-hair-websrv-start
+echo "starting cdn ..."
+docker-site-hair-cdn-start
+echo "starting nginx ..."
+docker-site-hair-nginx-start
+
+#docker-container-listall
+
+echo "Done!"

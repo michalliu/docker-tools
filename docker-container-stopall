@@ -10,5 +10,5 @@ echo "stop $name($hash)"
 else
 echo "stop $name($hash) skipped"
 fi
-docker stop $hash > /dev/null
+docker stop $hash
 done

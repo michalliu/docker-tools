@@ -1,0 +1,2 @@
+#!/bin/sh
+docker run -d --name hair_websrv --link hair_svn:svn --link hair_mysql:mysql witi/debian_hair_websrv:latest /bin/serve

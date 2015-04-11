@@ -2,47 +2,93 @@
 set -e
 #set -x
 
-echo "stopping all containers"
-docker-container-stopall
+function stop_all(){
+  echo "stopping all containers"
+  docker-container-stopall
+}
 
-WEB_CONTAINERID=$(docker ps -a | grep hair_websrv | awk '{print $1}')
-SVN_CONTAINERID=$(docker ps -a | grep hair_svn | awk '{print $1}')
-MYSQL_CONTAINERID=$(docker ps -a | grep hair_mysql | awk '{print $1}')
+function remove_all() {
+  echo "removing all containers"
+  docker-container-removeall
+}
 
-CDATE=`date +%Y%m%d%H%M%S`
+function commit_all(){
+  WEB_CONTAINERID=$(docker ps -a | grep hair_websrv | awk '{print $1}')
+  SVN_CONTAINERID=$(docker ps -a | grep hair_svn | awk '{print $1}')
+  MYSQL_CONTAINERID=$(docker ps -a | grep hair_mysql | awk '{print $1}')
+  CDN_CONTAINERID=$(docker ps -a | grep hair_cdn | awk '{print $1}')
+  NGINX_CONTAINERID=$(docker ps -a | grep hair_nginx | awk '{print $1}')
+  
+  CDATE=`date +%Y%m%d%H%M%S`
+  
+  if [ "$WEB_CONTAINERID" != "" ];then
+  IMAGE_NAME="witi/debian_hair_websrv:latest"
+  echo "save hair_websrv($WEB_CONTAINERID) to $IMAGE_NAME"
+  docker commit -m 'stat at $CDATE' $WEB_CONTAINERID $IMAGE_NAME > /dev/null
+  fi
+  
+  if [ "$SVN_CONTAINERID" != "" ];then
+  IMAGE_NAME="witi/debian_hair_svn:latest"
+  echo "save hair_svn($SVN_CONTAINERID) to $IMAGE_NAME"
+  docker commit -m 'stat at $CDATE' $SVN_CONTAINERID $IMAGE_NAME > /dev/null
+  fi
+  
+  if [ "$MYSQL_CONTAINERID" != "" ];then
+  IMAGE_NAME="witi/debian_hair_mysql:latest"
+  echo "save hair_mysql($MYSQL_CONTAINERID) to $IMAGE_NAME"
+  docker commit -m 'stat at $CDATE' $MYSQL_CONTAINERID $IMAGE_NAME > /dev/null
+  # backup mysql
+  #IMAGE_NAME="witi/debian_hair_mysql:$CDATE"
+  #echo "save hair_mysql to $IMAGE_NAME"
+  #docker commit -m 'stat at $CDATE' $MYSQL_CONTAINERID $IMAGE_NAME > /dev/null
+  fi
+  
+  if [ "$CDN_CONTAINERID" != "" ];then
+  IMAGE_NAME="witi/debian_hair_cdn:latest"
+  echo "save hair_cdn($CDN_CONTAINERID) to $IMAGE_NAME"
+  docker commit -m 'stat at $CDATE' $CDN_CONTAINERID $IMAGE_NAME > /dev/null
+  fi
+  
+  if [ "$NGINX_CONTAINERID" != "" ];then
+  IMAGE_NAME="witi/debian_hair_nginx:latest"
+  echo "save hair_nginx($NGINX_CONTAINERID) to $IMAGE_NAME"
+  docker commit -m 'stat at $CDATE' $NGINX_CONTAINERID $IMAGE_NAME > /dev/null
+  fi
+}
 
-if [ "$WEB_CONTAINERID" != "" ];then
-IMAGE_NAME="debian_websrv_hair:latest"
-echo "save hair_websrv to $IMAGE_NAME"
-docker commit -m 'stat at $CDATE' $WEB_CONTAINERID $IMAGE_NAME > /dev/null
+function start_all(){
+  # the order is important
+  echo "starting svn ..."
+  docker-site-hair-svn-start > /dev/null
+  echo "starting mysql ..."
+  docker-site-hair-mysql-start > /dev/null
+  echo "starting webserver ..."
+  docker-site-hair-websrv-start > /dev/null
+  echo "starting cdn ..."
+  docker-site-hair-cdn-start > /dev/null
+  echo "starting nginx ..."
+  docker-site-hair-nginx-start > /dev/null
+}
+
+function list_all(){
+  docker-container-listall
+}
+
+if [ "$1" = "" ];then
+  echo "usage: restart|stopall"
+  exit 0
 fi
 
-if [ "$SVN_CONTAINERID" != "" ];then
-IMAGE_NAME="witi/debian_svn_hair:latest"
-echo "save hair_svn to $IMAGE_NAME"
-docker commit -m 'stat at $CDATE' $SVN_CONTAINERID $IMAGE_NAME
+if [ "$1" = "restart" ];then
+  stop_all
+  commit_all
+  remove_all
+  start_all
+  list_all
+elif [ "$1" = "stopall" ];then
+  stop_all
+  commit_all
+  remove_all
 fi
-
-if [ "$MYSQL_CONTAINERID" != "" ];then
-IMAGE_NAME="witi/debian_mysql5.5_hair:latest"
-echo "save hair_mysql to $IMAGE_NAME"
-docker commit -m 'stat at $CDATE' $MYSQL_CONTAINERID $IMAGE_NAME
-# backup mysql
-#IMAGE_NAME="witi/debian_mysql5.5_hair:$CDATE"
-#echo "save hair_mysql to $IMAGE_NAME"
-#docker commit -m 'stat at $CDATE' $MYSQL_CONTAINERID $IMAGE_NAME
-fi
-
-docker-container-removeall
-
-# the order is important
-echo "starting svn ..."
-docker-site-svn-hair-start > /dev/null
-echo "starting mysql ..."
-docker-site-mysql-hair-start > /dev/null
-echo "starting webserver ..."
-docker-site-websrv-hair-start > /dev/null
-
-docker-container-listall
 
 echo "Done!"

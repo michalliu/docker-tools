@@ -1,3 +1,0 @@
-#!/bin/sh
-ID=$(docker run -d -p 4800:3306 --name hair_mysql witi/debian_mysql5.5_hair:latest /bin/serve)
-docker inspect $ID | grep -C 5 HostPort
