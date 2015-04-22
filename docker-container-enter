@@ -12,6 +12,8 @@ if [ -z "$1" ]; then
   echo ""
   echo "Enters the Docker CONTAINER and executes the specified COMMAND."
   echo "If COMMAND is not specified, runs an interactive shell in CONTAINER."
+  echo ""
+  docker-container-listall
 else
   PID=$(docker inspect --format "{{.State.Pid}}" "$1")
   if [ -z "$PID" ]; then

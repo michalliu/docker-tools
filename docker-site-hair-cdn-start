@@ -1,2 +1,2 @@
 #!/bin/sh
-docker run -d --name hair_cdn --link hair_svn:svn witi/debian_hair_cdn:latest /bin/serve
+docker run -d -p 8081:8081 --name hair_cdn --link hair_svn:svn witi/debian_hair_cdn:latest /bin/serve
