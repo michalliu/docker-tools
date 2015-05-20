@@ -1,0 +1,2 @@
+#!/bin/sh
+docker run -i -d -p 4800:3306 --name mq_mysql witi/debian_mq_mysql:latest /bin/serve

@@ -1,0 +1,10 @@
+#!/bin/sh
+if [ -z $1 ];then
+echo "Usage: $0 image_name"
+echo ""
+echo "Chose from the following:"
+echo ""
+docker-images-listall
+exit 0
+fi
+docker run -i -d $1 /bin/bash

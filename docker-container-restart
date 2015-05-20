@@ -1,0 +1,3 @@
+#!/bin/sh
+docker stop $1
+docker start $1

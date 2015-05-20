@@ -1,0 +1,19 @@
+#!/bin/sh
+#docker images | awk '{print $1}' | xargs --no-run-if-empty docker rmi
+#docker rmi $(docker images | grep "^<none>" | awk '{print $3}')
+if [ -z $1 ];then
+echo "Usage: $0 container_hash [image_name]"
+else
+  hash="$1"
+  docker ps | grep "ago" | awk '{print $1}' | grep -q $hash
+  if [ "$?" != "0" ];then
+    echo "container $hash not found"
+    exit 1
+  fi
+  if [ -z $2 ];then
+    image=$(docker ps | grep "ago" | awk '{print $1"\t"$2}' | grep $hash | awk '{print $2}')
+  else
+    image="$2"
+  fi
+  docker commit $hash $image
+fi
