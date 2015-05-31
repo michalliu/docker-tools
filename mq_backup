@@ -4,7 +4,7 @@ set -e
 SCRIPT_NAME=$(basename $0)
 LOG_NAME=${SCRIPT_NAME}.log
 LOG_FILE=/root/${LOG_NAME}
-MAX_KEEP=3
+MAX_KEEP=10
 BACKUP_FOLDER=~/backup
 
 log(){
@@ -33,12 +33,20 @@ log "start $container_name"
 docker start $container_hash > /dev/null
 log "backup $container_name success"
 
+MAX_KEEP_SAVED=$MAX_KEEP
+#nginx backups are 752MB too large
+if [ "$container_name" = "debian_mq_nginx" ];then
+MAX_KEEP=7
+fi
+
 cd $backup_folder2
 if [[ $(ls -tl | wc -l) > $MAX_KEEP ]];then
   log "cleanup $backup_folder2"
   ls -t | sed -e "1,${MAX_KEEP}d" | xargs -d '\n' rm -rvf | logger -t $SCRIPT_NAME
   log "cleanup $backup_folder2 success"
 fi
+
+MAX_KEEP=$MAX_KEEP_SAVED
 }
 
 backup witi/debian_mq_mysql
