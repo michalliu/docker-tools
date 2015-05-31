@@ -15,5 +15,6 @@ else
   else
     image="$2"
   fi
-  docker commit $hash $image
+  new_image_hash=$(docker commit $hash $image)
+  echo "${image}(${new_image_hash}) is saved"
 fi

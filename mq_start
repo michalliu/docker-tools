@@ -1,0 +1,7 @@
+#!/bin/bash
+set -e
+set -x
+docker-site-mq-mysql-start
+docker-site-mq-postgresql-start
+docker-site-mq-redis-start
+docker-site-mq-nginx-start
