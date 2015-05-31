@@ -1,5 +1,9 @@
 #!/bin/bash
 #docker ps -a | grep 'ago' | awk '{print $1}' | xargs --no-run-if-empty docker rm 
+. fns
+if ! promptyn 'dangerours operation, are you sure[y/n]?';then
+exit 1
+fi
 
 IFS=$'\n'
 for line in `docker ps -a | grep 'ago'`;do
