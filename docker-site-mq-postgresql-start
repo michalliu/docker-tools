@@ -1,0 +1,2 @@
+#!/bin/sh
+docker run -d --name mq_postgresql witi/debian_mq_postgresql:latest /bin/serve

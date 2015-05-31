@@ -1,2 +1,2 @@
 #!/bin/sh
-docker run -i -d -p 80:80 -p 443:443 -p 2222:2222 --name mq_nginx --link mq_mysql:mysql witi/debian_mq_nginx /bin/serve
+docker run -d -p 80:80 -p 443:443 -p 2222:2222 --name mq_nginx --link mq_mysql:mysql --link mq_postgresql witi/debian_mq_nginx /bin/serve
