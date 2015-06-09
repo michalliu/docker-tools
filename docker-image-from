@@ -5,7 +5,7 @@ if [ -z $1 ];then
 echo "Usage: $0 container_hash [image_name]"
 else
   hash="$1"
-  docker ps | grep "ago" | awk '{print $1}' | grep -q $hash
+  docker ps -a | grep "ago" | awk '{print $1}' | grep -q $hash
   if [ "$?" != "0" ];then
     echo "container $hash not found"
     exit 1
