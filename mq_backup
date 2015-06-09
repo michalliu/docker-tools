@@ -40,8 +40,9 @@ MAX_KEEP=7
 fi
 
 cd $backup_folder2
-if [[ $(ls -tl | wc -l) > $MAX_KEEP ]];then
-  log "cleanup $backup_folder2"
+current_keep=$(ls -tl | wc -l)
+if [[ $current_keep -gt $MAX_KEEP ]];then
+  log "cleanup $backup_folder2 maxmium is $MAX_KEEP, current is $current_keep"
   ls -t | sed -e "1,${MAX_KEEP}d" | xargs -d '\n' rm -rvf | logger -t $SCRIPT_NAME
   log "cleanup $backup_folder2 success"
 fi
