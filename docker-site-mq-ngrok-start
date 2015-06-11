@@ -1,0 +1,6 @@
+#!/bin/sh
+if [ -d ~/docker_shared ];then
+    docker run -i -d -p 8000:8000 -p 4430:4430 -p 4443:4443 -v ~/docker_shared:/root/shared:rw --name mq_ngrok witi/debian_mq_ngrok /bin/bash
+  else
+    docker run -i -d -p 8000:8000 -p 4430:4430 -p 4443:4443 witi/debian_mq_ngrok --name mq_ngrok /bin/bash
+  fi

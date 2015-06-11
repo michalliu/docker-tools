@@ -1,4 +1,5 @@
 #!/bin/sh
 docker run -d -p 80:80 -p 443:443 -p 2222:2222 --name mq_nginx --link mq_mysql:mysql-server \
 --link mq_redis:redis-server \
+--link mq_ngrok:ngrok-server \
 --link mq_postgresql:postgresql-server witi/debian_mq_nginx /bin/serve

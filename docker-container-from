@@ -1,14 +1,23 @@
 #!/bin/sh
 if [ -z $1 ];then
-echo "Usage: $0 image_name"
+echo "Usage: $0 image_name container_name"
 echo ""
 echo "Chose from the following:"
 echo ""
 docker-images-listall
 exit 0
 fi
-if [ -d ~/docker_shared ];then
-docker run -i -d -v ~/docker_shared:/root/shared:rw $1 /bin/bash
+
+if [ -n $2 ];then
+  if [ -d ~/docker_shared ];then
+    docker run -i -d -v ~/docker_shared:/root/shared:rw --name $2 $1 /bin/bash
+  else
+    docker run -i -d --name $2 $1 /bin/bash
+  fi
 else
-docker run -i -d $1 /bin/bash
+  if [ -d ~/docker_shared ];then
+    docker run -i -d -v ~/docker_shared:/root/shared:rw $1 /bin/bash
+  else
+    docker run -i -d $1 /bin/bash
+  fi
 fi
