@@ -1,0 +1,53 @@
+#!/bin/bash
+set -e
+
+SCRIPT_NAME=$(basename $0)
+LOG_NAME=${SCRIPT_NAME}.log
+LOG_FILE=/root/${LOG_NAME}
+MAX_KEEP=10
+BACKUP_FOLDER=~/backup
+
+log(){
+echo $1
+logger $1 -t $SCRIPT_NAME
+}
+
+
+backup(){
+container_name="$1"
+container_hash=$(docker ps -a | grep $container_name | awk '{print $1}')
+
+backup_file_basename=$(basename $container_name)
+backup_folder2=$BACKUP_FOLDER/${backup_file_basename}
+mkdir -p $backup_folder2
+backup_date=`date +%Y%m%d%H%M%S`
+backup_filepath=${backup_folder2}/${backup_file_basename}.${backup_date}.tgz 
+
+log "backup $container_name"
+log "stop $container_name"
+docker stop $container_hash > /dev/null
+log "backup $container_name"
+docker export $container_hash | gzip -c > ${backup_filepath}
+log "$backup_filepath saved"
+log "start $container_name"
+docker start $container_hash > /dev/null
+log "backup $container_name success"
+
+MAX_KEEP_SAVED=$MAX_KEEP
+#nginx backups are 752MB too large
+if [ "$container_name" = "debian_mq_nginx" ];then
+MAX_KEEP=7
+fi
+
+cd $backup_folder2
+current_keep=$(ls -tl | wc -l)
+if [[ $current_keep -gt $MAX_KEEP ]];then
+  log "cleanup $backup_folder2 maxmium is $MAX_KEEP, current is $current_keep"
+  ls -t | sed -e "1,${MAX_KEEP}d" | xargs -d '\n' rm -rvf | logger -t $SCRIPT_NAME
+  log "cleanup $backup_folder2 success"
+fi
+
+MAX_KEEP=$MAX_KEEP_SAVED
+}
+
+backup witi/debian_hair_mysql
