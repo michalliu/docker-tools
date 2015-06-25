@@ -1,2 +1,2 @@
 #!/bin/sh
-docker run -d --name hair_mysql witi/debian_hair_mysql:latest /bin/serve
+docker run -d -p 4800:3306 --name hair_mysql witi/debian_hair_mysql:latest /bin/serve
