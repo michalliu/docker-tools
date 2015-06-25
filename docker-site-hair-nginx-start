@@ -1,2 +1,6 @@
 #!/bin/sh
-docker run -d -p 80:80 -p 8080:8080  -p 8086:8086 --name hair_nginx --link hair_websrv:websrv witi/debian_hair_nginx /bin/serve
+docker run -d -p 80:80 -p 8080:8080  -p 8086:8086 \
+--name hair_nginx \
+--link hair_websrv:websrv \
+--link hair_cdn:cdn \
+witi/debian_hair_nginx /bin/serve
