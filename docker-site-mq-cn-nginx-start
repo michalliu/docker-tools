@@ -1,0 +1,2 @@
+#!/bin/sh
+docker run -d -p 80:80 -p 443:443 --name mq_nodebb witi/nodebb /bin/serve

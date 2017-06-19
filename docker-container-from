@@ -8,7 +8,7 @@ docker-images-listall
 exit 0
 fi
 
-if [ -n $2 ];then
+if [ -n "$2" ];then
   if [ -d ~/docker_shared ];then
     docker run -i -d -v ~/docker_shared:/root/shared:rw --name $2 $1 /bin/bash
   else
