@@ -1,0 +1,11 @@
+#!/bin/sh
+# 21 standard ftp port
+# 60000-60300 ftp pasv mode
+if [ -d ~/data/ftp ];then
+    docker run -i -d -p 21:21 -p 60000-60300:60000-60300 \
+-v ~/data/ftp:/var/www/sites/makegood:rw \
+--name mq_ftp witi/debian_mq_ftp /bin/serve
+  else
+    docker run -i -d -p 21:21 -p 60000-60300:60000-60300 \
+--name mq_ftp witi/debian_mq_ftp /bin/serve
+  fi
