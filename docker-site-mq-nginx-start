@@ -1,5 +1,11 @@
 #!/bin/sh
-docker run -d -p 80:80 -p 443:443 -p 2222:2222 --name mq_nginx --link mq_mysql:mysql-server \
---link mq_redis:redis-server \
---link mq_ngrok:ngrok-server \
---link mq_postgresql:postgresql-server witi/debian_mq_nginx /bin/serve
+docker run -d -p 80:80 -p 443:443 -p 2222:2222 --name mq_nginx \
+-v ~/data/ftp:/var/www/ftp-mqmaker-com:rw \
+--link mq_mysql:mysql.server.com \
+--link mq_redis:redis.server.com \
+--link mq_postgresql:postgresql.server.com  \
+witi/debian_mq_nginx /bin/serve
+
+
+#ngrok disabled
+#--link mq_ngrok:ngrok.server.com
