@@ -1,2 +1,9 @@
 #!/bin/sh
-docker run -d -p 4800:3306 --name mq_mysql witi/debian_mq_mysql:latest /bin/serve
+if [ -d ~/data/mysql ];then
+    docker run -d -p 4800:3306 \
+-v ~/data/mysql:/var/www/mysql:rw \
+--name mq_mysql witi/debian_mq_mysql:latest /bin/serve
+  else
+    docker run -d -p 4800:3306 \
+--name mq_mysql witi/debian_mq_mysql:latest /bin/serve
+  fi
