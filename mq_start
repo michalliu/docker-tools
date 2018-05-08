@@ -1,7 +1,13 @@
 #!/bin/bash
 set -e
 set -x
+# main site
 docker-site-mq-mysql-start
+
+# discourse
 docker-site-mq-postgresql-start
 docker-site-mq-redis-start
 docker-site-mq-nginx-start
+
+#docker-site-mq-ftp-start
+#docker-site-mq-ngrok-start
