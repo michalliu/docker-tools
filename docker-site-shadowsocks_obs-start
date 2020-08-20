@@ -1,0 +1,2 @@
+#!/bin/sh
+docker run -d -p 8080:8888 --name shadowsocks_obs witi/shadowsocksr /bin/serve
