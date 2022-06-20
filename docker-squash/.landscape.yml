@@ -1,0 +1,2 @@
+ignore-patterns:
+    - docker_squash/lib/xtarfile.py
